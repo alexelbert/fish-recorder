@@ -27,6 +27,16 @@ def validate_data_input(response, valid_responses):
     else:
         print(f"Invalid response. Please enter one of {valid_responses}.")
         return False
+    
+def get_retrieval_speed():
+    """
+    Asks user if retrieval speed is fast, returns "fast" or "slow" based 
+    on the user input.
+    """
+    while True:
+        response = get_user_input("Was the retrevial speed fast? (y/n):\n")
+        if validate_data_input(response, ['y', 'n']):
+            return 'fast' if response.lower() == 'y' else 'slow'
 
 
 def update_worksheet(data, worksheet_name, column_name):
@@ -57,6 +67,10 @@ def main():
     fish_species = input("Enter your fish species:\n")
     print("Fish species: " + fish_species)
     update_worksheet(fish_species, "input_data", "fish_species")
+
+    retrieval_speed = get_retrieval_speed()
+    print("Retrieval speed: " + retrieval_speed)
+    update_worksheet(retrieval_speed, "input_data", "retrieval_speed")
 
 print("Welcome to Fish Recorder")
 main()
