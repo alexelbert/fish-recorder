@@ -35,9 +35,18 @@ def validate_data_input(response, valid_responses):
 
 
 def get_location():
-    response = requests.get("http://ip-api.com/json/")
-    data = response.json()
-    return data.get("lat"), data.get("lon"), data.get("city")
+    """
+    Retrieves the user's geographical location based of IP address,
+    sends a GET request to get latitude, longitude and city from response.
+    If request fails returns None for each value and throws an error message.
+    """
+    try:
+        response = requests.get("http://ip-api.com/json/")
+        data = response.json()
+        return data.get("lat"), data.get("lon"), data.get("city")
+    except:
+        print("Something went wrong fetching your location.")
+        return None, None, None
 
 
 def get_retrieval_speed():
@@ -94,7 +103,12 @@ def main():
     update_worksheet(time, "input_data", "time")
 
     latitude, longitude, city = get_location()
-    update_worksheet(city, "input_data", "location")
+    # if get_location() throws an error, add null for location variable
+    # blank cells would cause an error in data entry (they would occupy the blank cells instead of current row)
+    if latitude is None or longitude is None or city is None:
+        update_worksheet("null", "input_data", "location")
+    else:
+        update_worksheet(city, "input_data", "location")
     
     try:
         weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
