@@ -1,5 +1,8 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from datetime import datetime
+import requests
+
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -27,6 +30,11 @@ def validate_data_input(response, valid_responses):
     else:
         print(f"Invalid response. Please enter one of {valid_responses}.")
         return False
+    
+def get_location():
+    response = requests.get("http://ip-api.com/json/")
+    data = response.json()
+    return data.get("lat"), data.get("lon"), data.get("city")
     
 def get_retrieval_speed():
     """
@@ -64,10 +72,28 @@ def main():
     """
     Main function to run the the fish recorder program.
     """
+    # auto fill
+    date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
+    update_worksheet(date, "input_data", "date")
+    update_worksheet(time, "input_data", "time")
+
+    latitude, longitude, city = get_location()
+    update_worksheet(city, "input_data", "location")
+    #ground_temp	cloud_cover	air_pressure	wind_direction	wind_speed
+    weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
+    x = weather_data.json()
+    update_worksheet(x['current']['temperature_2m'], "input_data", "ground_temp")
+    update_worksheet(x['current']['cloud_cover'], "input_data", "cloud_cover")
+    update_worksheet(x['current']['pressure_msl'], "input_data", "air_pressure")
+    update_worksheet(x['current']['wind_direction_10m'], "input_data", "wind_direction")
+    update_worksheet(x['current']['wind_speed_10m'], "input_data", "wind_speed")
+    
+
+    # user input
     fish_species = input("Enter your fish species:\n")
     print("Fish species: " + fish_species)
     update_worksheet(fish_species, "input_data", "fish_species")
-
+    
     retrieval_speed = get_retrieval_speed()
     print("Retrieval speed: " + retrieval_speed)
     update_worksheet(retrieval_speed, "input_data", "retrieval_speed")
