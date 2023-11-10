@@ -15,11 +15,13 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('fish_recorder')
 
-def get_user_input(promt):
+
+def get_user_input(prompt):
     """
-    Get input from the user with a specific promt.
+    Get input from the user with a specific prompt.
     """
-    return input(promt).strip()
+    return input(prompt).strip()
+
 
 def validate_data_input(response, valid_responses):
     """
@@ -31,11 +33,13 @@ def validate_data_input(response, valid_responses):
         print(f"Invalid response. Please enter one of {valid_responses}.")
         return False
     
+
 def get_location():
     response = requests.get("http://ip-api.com/json/")
     data = response.json()
     return data.get("lat"), data.get("lon"), data.get("city")
     
+
 def get_retrieval_speed():
     """
     Asks user if retrieval speed is fast, returns "fast" or "slow" based 
@@ -53,10 +57,10 @@ def update_worksheet(data, worksheet_name, column_name):
     """
     worksheet = SHEET.worksheet(worksheet_name)
 
-    # Find all values in row of headings
+    # find all values in row of headings
     headers = worksheet.row_values(1)
 
-    # Find the right column
+    # find the right column
     try:
         column_index = headers.index(column_name) + 1
     except ValueError:
@@ -68,26 +72,12 @@ def update_worksheet(data, worksheet_name, column_name):
 
     worksheet.update_cell(next_row, column_index, data)
 
+
 def main():
     """
     Main function to run the the fish recorder program.
     """
-    # auto fill
-    date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
-    update_worksheet(date, "input_data", "date")
-    update_worksheet(time, "input_data", "time")
-
-    latitude, longitude, city = get_location()
-    update_worksheet(city, "input_data", "location")
-    #ground_temp	cloud_cover	air_pressure	wind_direction	wind_speed
-    weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
-    x = weather_data.json()
-    update_worksheet(x['current']['temperature_2m'], "input_data", "ground_temp")
-    update_worksheet(x['current']['cloud_cover'], "input_data", "cloud_cover")
-    update_worksheet(x['current']['pressure_msl'], "input_data", "air_pressure")
-    update_worksheet(x['current']['wind_direction_10m'], "input_data", "wind_direction")
-    update_worksheet(x['current']['wind_speed_10m'], "input_data", "wind_speed")
-    
+    print("Welcome to Fish Recorder")    
 
     # user input
     fish_species = input("Enter your fish species:\n")
@@ -98,5 +88,26 @@ def main():
     print("Retrieval speed: " + retrieval_speed)
     update_worksheet(retrieval_speed, "input_data", "retrieval_speed")
 
-print("Welcome to Fish Recorder")
-main()
+    # auto fill
+    date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
+    update_worksheet(date, "input_data", "date")
+    update_worksheet(time, "input_data", "time")
+
+    latitude, longitude, city = get_location()
+    update_worksheet(city, "input_data", "location")
+    weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
+    x = weather_data.json()
+    update_worksheet(
+        x['current']['temperature_2m'], "input_data", "ground_temp")
+    update_worksheet(
+        x['current']['cloud_cover'], "input_data", "cloud_cover")
+    update_worksheet(
+        x['current']['pressure_msl'], "input_data", "air_pressure")
+    update_worksheet(
+        x['current']['wind_direction_10m'], "input_data", "wind_direction")
+    update_worksheet(
+        x['current']['wind_speed_10m'], "input_data", "wind_speed")
+
+
+if __name__ == "__main__":
+    main()
