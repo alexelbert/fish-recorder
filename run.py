@@ -95,18 +95,25 @@ def main():
 
     latitude, longitude, city = get_location()
     update_worksheet(city, "input_data", "location")
-    weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
-    x = weather_data.json()
-    update_worksheet(
-        x['current']['temperature_2m'], "input_data", "ground_temp")
-    update_worksheet(
-        x['current']['cloud_cover'], "input_data", "cloud_cover")
-    update_worksheet(
-        x['current']['pressure_msl'], "input_data", "air_pressure")
-    update_worksheet(
-        x['current']['wind_direction_10m'], "input_data", "wind_direction")
-    update_worksheet(
-        x['current']['wind_speed_10m'], "input_data", "wind_speed")
+    
+    try:
+        weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
+        weather_data = weather_data.json()
+        c = weather_data['current']
+        update_worksheet(c['temperature_2m'], "input_data", "ground_temp")
+        update_worksheet(c['cloud_cover'], "input_data", "cloud_cover")
+        update_worksheet(c['pressure_msl'], "input_data", "air_pressure")
+        update_worksheet(c['wind_direction_10m'], "input_data", "wind_direction")
+        update_worksheet(c['wind_speed_10m'], "input_data", "wind_speed")
+    except:
+        # if api throws error, add null for weather variables so there are no blank cells 
+        # blank cells would cause error in data entry (they would occupy the blank cells instead of current row)
+        print(f"Oops, something went wrong with the weather data request.")
+        update_worksheet('null', "input_data", "ground_temp")
+        update_worksheet('null', "input_data", "cloud_cover")
+        update_worksheet('null', "input_data", "air_pressure")
+        update_worksheet('null', "input_data", "wind_direction")
+        update_worksheet('null', "input_data", "wind_speed")
 
 
 if __name__ == "__main__":
