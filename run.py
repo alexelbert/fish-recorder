@@ -32,17 +32,17 @@ def validate_data_input(response, valid_responses):
     else:
         print(f"Invalid response. Please enter one of {valid_responses}.")
         return False
-    
+
 
 def get_location():
     response = requests.get("http://ip-api.com/json/")
     data = response.json()
     return data.get("lat"), data.get("lon"), data.get("city")
-    
+
 
 def get_retrieval_speed():
     """
-    Asks user if retrieval speed is fast, returns "fast" or "slow" based 
+    Asks user if retrieval speed is fast, returns "fast" or "slow" based
     on the user input.
     """
     while True:
@@ -77,13 +77,13 @@ def main():
     """
     Main function to run the the fish recorder program.
     """
-    print("Welcome to Fish Recorder")    
+    print("Welcome to Fish Recorder")
 
     # user input
     fish_species = input("Enter your fish species:\n")
     print("Fish species: " + fish_species)
     update_worksheet(fish_species, "input_data", "fish_species")
-    
+
     retrieval_speed = get_retrieval_speed()
     print("Retrieval speed: " + retrieval_speed)
     update_worksheet(retrieval_speed, "input_data", "retrieval_speed")
