@@ -12,34 +12,51 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('fish_recorder')
 
+def get_user_input(promt):
+    """
+    Get input from the user with a specific promt.
+    """
+    return input(promt).strip()
 
-def update_worksheet(fish_species, worksheet_name):
+def validate_data_input(response, valid_responses):
     """
-    Updating the user input for fish species into the worksheet
+    Validating the data provided by the user.
     """
-    
+    if response.lower() in valid_responses:
+        return True
+    else:
+        print(f"Invalid response. Please enter one of {valid_responses}.")
+        return False
+
+
+def update_worksheet(data, worksheet_name, column_name):
+    """
+    Updating the user input to specified column of the worksheet.
+    """
     worksheet = SHEET.worksheet(worksheet_name)
 
-    # Find all values in header row
+    # Find all values in row of headings
     headers = worksheet.row_values(1)
 
-    # find the column named "fish species"
+    # Find the right column
     try:
-        fish_species_col = headers.index('fish_species') + 1
+        column_index = headers.index(column_name) + 1
     except ValueError:
-        raise ValueError("Column 'fish_species' not found in the worksheet.")
+        print(f"Column '{column_name} not found in worksheet")
+        return
 
-    fish_species_col_values = worksheet.col_values(fish_species_col)
-    next_row = len(fish_species_col_values) + 1
+    column_values = worksheet.col_values(column_index)
+    next_row = len(column_values) + 1
 
-    worksheet.update_cell(next_row, fish_species_col, fish_species)
+    worksheet.update_cell(next_row, column_index, data)
 
-fish_species = input("Enter your fish species:")
-print("Fish species: " + fish_species)
-update_worksheet(fish_species, "input_data")
+def main():
+    """
+    Main function to run the the fish recorder program.
+    """
+    fish_species = input("Enter your fish species:\n")
+    print("Fish species: " + fish_species)
+    update_worksheet(fish_species, "input_data", "fish_species")
 
-
-
-
-
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
+print("Welcome to Fish Recorder")
+main()
