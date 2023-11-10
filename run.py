@@ -44,8 +44,8 @@ def get_location():
         response = requests.get("http://ip-api.com/json/")
         data = response.json()
         return data.get("lat"), data.get("lon"), data.get("city")
-    except:
-        print("Something went wrong fetching your location.")
+    except requests.exceptions.RequestException as e:
+        print(f"Something went wrong fetching your location: {e}")
         return None, None, None
 
 
@@ -104,12 +104,13 @@ def main():
 
     latitude, longitude, city = get_location()
     # if get_location() throws an error, add null for location variable
-    # blank cells would cause an error in data entry (they would occupy the blank cells instead of current row)
+    # blank cells would cause an error in data entry
+    # they would occupy the blank cells instead of current row
     if latitude is None or longitude is None or city is None:
         update_worksheet("null", "input_data", "location")
     else:
         update_worksheet(city, "input_data", "location")
-    
+
     try:
         weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
         weather_data = weather_data.json()
@@ -119,10 +120,11 @@ def main():
         update_worksheet(c['pressure_msl'], "input_data", "air_pressure")
         update_worksheet(c['wind_direction_10m'], "input_data", "wind_direction")
         update_worksheet(c['wind_speed_10m'], "input_data", "wind_speed")
-    except:
-        # if api throws error, add null for weather variables so there are no blank cells 
-        # blank cells would cause error in data entry (they would occupy the blank cells instead of current row)
-        print(f"Oops, something went wrong with the weather data request.")
+    except requests.exceptions.RequestException as e:
+        # if api throws error, add null for variables to avoid blank cells
+        # blank cells would cause error in data entry
+        # they would occupy the blank cells instead of current row
+        print(f"Oops, something went wrong with the weather data request: {e}")
         update_worksheet('null', "input_data", "ground_temp")
         update_worksheet('null', "input_data", "cloud_cover")
         update_worksheet('null', "input_data", "air_pressure")
