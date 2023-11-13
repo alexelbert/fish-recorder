@@ -48,6 +48,23 @@ def get_location():
         print(f"Something went wrong fetching your location: {e}")
         return None, None, None
 
+def get_fish_size():
+    """
+    Asks user for the size of the fish in centimeters, validates that it is a number value
+    and returns the size as a float value.
+    """
+    while True:
+        response = get_user_input("Enter the size  of the fish in cm:\n")
+        try:
+            # try and convert response to a positive float value
+            size = float(response)
+            if size <= 0:
+                print("The size must be a positive number. Please try again.")
+                continue
+            return size
+        except ValueError:
+            print("Oops. Please enter a number.")
+
 
 def get_water_clarity():
     """
@@ -121,6 +138,10 @@ def main():
     fish_species = input("Enter your fish species:\n")
     print("Fish species: " + fish_species)
     update_worksheet(fish_species, "input_data", "fish_species")
+
+    fish_size = get_fish_size()
+    print("Fish size: " + str(fish_size) + " cm")
+    update_worksheet(fish_size, "input_data", "fish_size")
 
     water_clarity = get_water_clarity()
     print("Water clarity: " + water_clarity)
