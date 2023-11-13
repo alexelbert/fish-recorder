@@ -113,27 +113,22 @@ def get_lure_colour():
         else:
             return ','.join(valid_colours)
 
-
-def update_worksheet(data, worksheet_name, column_name):
+def batch_update_worksheet(data, worksheet_name):
     """
-    Updating the user input to specified column of the worksheet.
+    Batch updating the user input in the worksheet.
     """
     worksheet = SHEET.worksheet(worksheet_name)
+    # getting all values, count how many there are then add 1 to find next row 
+    first_empty_row = len(worksheet.get_all_values()) + 1
+    # defining range of next row
+    cell_list = worksheet.range(f'A{first_empty_row}:N{first_empty_row}')
+    # assign user input to corresponding cell object
+    for i, cell in enumerate(cell_list):
+        if i < len(data): 
+            cell.value = data[i]
 
-    # find all values in row of headings
-    headers = worksheet.row_values(1)
-
-    # find the right column
-    try:
-        column_index = headers.index(column_name) + 1
-    except ValueError:
-        print(f"Column '{column_name} not found in worksheet")
-        return
-
-    column_values = worksheet.col_values(column_index)
-    next_row = len(column_values) + 1
-
-    worksheet.update_cell(next_row, column_index, data)
+    # update all cell values at once to the spreadsheet
+    worksheet.update_cells(cell_list)
 
 
 def main():
@@ -145,44 +140,32 @@ def main():
     # user input
     fish_species = input("Enter your fish species:\n")
     print("Fish species: " + fish_species)
-    update_worksheet(fish_species, "input_data", "fish_species")
 
     fish_size = get_fish_size()
     print("Fish size: " + str(fish_size) + " cm")
-    update_worksheet(fish_size, "input_data", "fish_size")
 
-    water_clarity = yes_or_no('Was the water clear?', 'clear', ' turbid')
+    water_clarity = yes_or_no('Was the water clear?', 'clear', 'turbid')
     print("Water clarity: " + water_clarity)
-    update_worksheet(water_clarity, "input_data", "water_clarity")
 
-    retrieval_speed = yes_or_no('Was the retrieval speed fast?', 'fast', ' slow')
+    retrieval_speed = yes_or_no('Was the retrieval speed fast?', 'fast', 'slow')
     print("Retrieval speed: " + retrieval_speed)
-    update_worksheet(retrieval_speed, "input_data", "retrieval_speed")
 
     lure_type = get_lure_type()
     print("Lure type: " + lure_type)
-    update_worksheet(lure_type, "input_data", "lure_type")
 
     lure_colour = get_lure_colour()
     print("Lure colour: " + lure_colour)
-    update_worksheet(lure_colour, "input_data", "lure_colour")
 
     # auto fill
     date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
-    update_worksheet(date, "input_data", "date")
-    update_worksheet(time, "input_data", "time")
 
     print("Fetching your current location...\n")
     latitude, longitude, city = get_location()
     # if get_location() throws an error, add null for location variable
-    # blank cells would cause an error in data entry
-    # they would occupy the blank cells instead of current row
     if latitude is None or longitude is None or city is None:
         print("Unable to fetch location, recording 'null' for location.")
-        update_worksheet("null", "input_data", "location")
     else:
         print(f"Your location: {city}\n")
-        update_worksheet(city, "input_data", "location")
 
     print("Fetching current weather data...\n")
     try:
@@ -190,24 +173,31 @@ def main():
         weather_data = weather_data.json()
         c = weather_data['current']
         print("Weather data collected. Recording temprature, cloud cover, air preassure, wind speed, wind direction.\n")
-        update_worksheet(c['temperature_2m'], "input_data", "ground_temp")
-        update_worksheet(c['cloud_cover'], "input_data", "cloud_cover")
-        update_worksheet(c['pressure_msl'], "input_data", "air_pressure")
-        update_worksheet(c['wind_direction_10m'], "input_data", "wind_direction")
-        update_worksheet(c['wind_speed_10m'], "input_data", "wind_speed")
-    except requests.exceptions.RequestException as e:
-        # if api throws error, add null for variables to avoid blank cells
-        # blank cells would cause error in data entry
-        # they would occupy the blank cells instead of current row
-        print(f"Oops, something went wrong with the weather data request: {e}")
-        print("Recodring 'null' for weather data.")
-        update_worksheet('null', "input_data", "ground_temp")
-        update_worksheet('null', "input_data", "cloud_cover")
-        update_worksheet('null', "input_data", "air_pressure")
-        update_worksheet('null', "input_data", "wind_direction")
-        update_worksheet('null', "input_data", "wind_speed")
+        temperature = c['temperature_2m']
+        cloud_cover = c['cloud_cover']
+        pressure = c['pressure_msl']
+        wind_direction = c['wind_direction_10m']
+        wind_speed = c['wind_speed_10m']
 
-    print("All data recorded successfully. Thank you for using Fish Recorder!")
+    except requests.exceptions.RequestException as e:
+        # if API throws error, add null for variables to avoid blank cells
+        print(f"Oops, something went wrong with the weather data request: {e}")
+        print("Recording 'null' for weather data.")
+        temperature = 'null'
+        cloud_cover = 'null'
+        pressure = 'null'
+        wind_direction = 'null'
+        wind_speed = 'null'
+
+    data = [
+        date, time, city, temperature, cloud_cover, pressure,
+        wind_direction, wind_speed, fish_species, fish_size,
+        water_clarity, lure_type, lure_colour, retrieval_speed
+    ]
+
+    batch_update_worksheet(data, "input_data")
+
+    print("Data recorded successfully. Thank you for using Fish Recorder!")
 
 
 if __name__ == "__main__":
