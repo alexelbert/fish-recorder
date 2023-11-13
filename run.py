@@ -48,10 +48,11 @@ def get_location():
         print(f"Something went wrong fetching your location: {e}")
         return None, None, None
 
+
 def get_fish_size():
     """
-    Asks user for the size of the fish in centimeters, validates that it is a number value
-    and returns the size as a float value.
+    Asks user for the size of the fish in centimeters, validates
+    that it is a number value and returns the size as a float value.
     """
     while True:
         response = get_user_input("Enter the size  of the fish in cm:\n")
@@ -69,29 +70,32 @@ def get_fish_size():
 def yes_or_no(question, yes, no):
     """
     Ask the user a yes or no question and returns the response.
-    """    
+    """
     while True:
         response = get_user_input(f"{question} (y/n):\n")
         if validate_data_input(response, ['y', 'n']):
             return yes if response.lower() == 'y' else no
 
+
 def get_lure_type():
     """
-    Asks the user to select a type of lure from a predefined list and returns the selected type.
+    Asks the user to select a type of lure from a predefined list
+    and returns the selected type.
     """
     types = ['jig', 'spinner', 'spoon', 'crankbait', 'fly', 'swimbait', 'popper', 'jerkbait']
 
     print("Select a lure type from the following list:\n")
     for i, type in enumerate(types, start=1):
         print(f"{i}. {type}")
-    
+
     while True:
         response = get_user_input("Enter the number of your lure type:\n")
 
         if response.isdigit() and 1 <= int(response) <= len(types):
             return types[int(response) - 1]
         else:
-            print("Oops. Please enter a number corresponding to the lure types.\n")
+            print("Oops. Please enter a number for your lure type.\n")
+
 
 def get_lure_colour():
     """
@@ -100,7 +104,8 @@ def get_lure_colour():
     as a way of preventing code to be inserted into input.
     """
     while True:
-        colours = get_user_input("Enter the colours of the lure, separated by commas:\n").split(',')
+        colours = get_user_input(
+            "Enter the colours of the lure, separated by commas:\n").split(',')
         valid_colours = []
 
         for colour in colours:
@@ -113,18 +118,19 @@ def get_lure_colour():
         else:
             return ','.join(valid_colours)
 
+
 def batch_update_worksheet(data, worksheet_name):
     """
     Batch updating the user input in the worksheet.
     """
     worksheet = SHEET.worksheet(worksheet_name)
-    # getting all values, count how many there are then add 1 to find next row 
+    # getting all values, count how many there are then add 1 to find next row
     first_empty_row = len(worksheet.get_all_values()) + 1
     # defining range of next row
     cell_list = worksheet.range(f'A{first_empty_row}:N{first_empty_row}')
     # assign user input to corresponding cell object
     for i, cell in enumerate(cell_list):
-        if i < len(data): 
+        if i < len(data):
             cell.value = data[i]
 
     # update all cell values at once to the spreadsheet
@@ -207,7 +213,7 @@ def main():
     print("Recording your data to the worksheet...")
     batch_update_worksheet(data, "input_data")
     print("\n--- DATA RECORDED SUCCESSFULLY ---\n")
-    
+
     print("Thank you for using Fish Recorder!")
     print("Your fishing trip details have been successfully recorded.")
 
