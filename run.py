@@ -135,33 +135,40 @@ def main():
     """
     Main function to run the the fish recorder program.
     """
-    print("\nWelcome to Fish Recorder\n")
+    print("\nWelcome to Fish Recorder!\n")
+    print("This application helps you record details about your fishing trips\n Details of your catch, weather conditions and location.")
     print("="*30, "\n")
 
     # user input
     print("\n--- FISH DETAILS ---\n")
-    fish_species = input("Enter your fish species:\n")
-    print("\nFish species: " + fish_species)
+    print("Let's start by recording details about the fish you caught.")
+    fish_species = input("Enter your fish species you caught (e.g., Trout, Perch):\n")
+    print("\nFish species recorded: " + fish_species)
 
+    print("\nNow let's record the size of the fish.")
     fish_size = get_fish_size()
-    print("\nFish size: " + str(fish_size) + " cm")
+    print("\nFish size recorded: " + str(fish_size) + " cm")
 
+    print("\nNext, let's record the water clarity at the time of your catch.")
     water_clarity = yes_or_no('Was the water clear?', 'clear', 'turbid')
-    print("\nWater clarity: " + water_clarity)
+    print("\nWater clarity recorded: " + water_clarity)
 
+    print("\nLet's record the retrieval speed of your lure.")
     retrieval_speed = yes_or_no('Was the retrieval speed fast?', 'fast', 'slow')
-    print("\nRetrieval speed: " + retrieval_speed)
+    print("\nRetrieval speed recorded: " + retrieval_speed)
 
+    print("\nLet's select the type of lure you used.")
     lure_type = get_lure_type()
-    print("\nLure type: " + lure_type)
+    print("\nLure type recorded: " + lure_type)
 
+    print("\nFinally let's record the color of the lure.")
     lure_colour = get_lure_colour()
-    print("\nLure colour: " + lure_colour)
+    print("\nLure colour recorded: " + lure_colour)
 
     # auto fill
     date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
     print("\n--- LOCATION AND WEATHER DATA ---\n")
-
+    print("Now, we will automatically fetch your current location and weather data.")
     print("Fetching your current location...\n")
     latitude, longitude, city = get_location()
     # if get_location() throws an error, add null for location variable
@@ -197,11 +204,12 @@ def main():
         wind_direction, wind_speed, fish_species, fish_size,
         water_clarity, lure_type, lure_colour, retrieval_speed
     ]
-
+    print("Recording your data to the worksheet...")
     batch_update_worksheet(data, "input_data")
-
     print("\n--- DATA RECORDED SUCCESSFULLY ---\n")
+    
     print("Thank you for using Fish Recorder!")
+    print("Your fishing trip details have been successfully recorded.")
 
 
 if __name__ == "__main__":
