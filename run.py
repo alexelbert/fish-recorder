@@ -49,13 +49,24 @@ def get_location():
         return None, None, None
 
 
+def get_water_clarity():
+    """
+    Asks user if water clarity is clear, returns "clear" or "turbid" based 
+    of the user input.
+    """
+    while True:
+        response = get_user_input("Was the water clear? (y/n):\n")
+        if validate_data_input(response, ['y', 'n']):
+            return 'clear' if response.lower() == 'y' else 'turbid'
+
+
 def get_retrieval_speed():
     """
     Asks user if retrieval speed is fast, returns "fast" or "slow" based
     on the user input.
     """
     while True:
-        response = get_user_input("Was the retrevial speed fast? (y/n):\n")
+        response = get_user_input("Was the retrieval speed fast? (y/n):\n")
         if validate_data_input(response, ['y', 'n']):
             return 'fast' if response.lower() == 'y' else 'slow'
 
@@ -86,12 +97,16 @@ def main():
     """
     Main function to run the the fish recorder program.
     """
-    print("Welcome to Fish Recorder")
+    print("Welcome to Fish Recorder\n")
 
     # user input
     fish_species = input("Enter your fish species:\n")
     print("Fish species: " + fish_species)
     update_worksheet(fish_species, "input_data", "fish_species")
+
+    water_clarity = get_water_clarity()
+    print("Water clarity: " + water_clarity)
+    update_worksheet(water_clarity, "input_data", "water_clarity")
 
     retrieval_speed = get_retrieval_speed()
     print("Retrieval speed: " + retrieval_speed)
@@ -102,7 +117,7 @@ def main():
     update_worksheet(date, "input_data", "date")
     update_worksheet(time, "input_data", "time")
 
-    print("Fetching your current location...")
+    print("Fetching your current location...\n")
     latitude, longitude, city = get_location()
     # if get_location() throws an error, add null for location variable
     # blank cells would cause an error in data entry
@@ -111,15 +126,15 @@ def main():
         print("Unable to fetch location, recording 'null' for location.")
         update_worksheet("null", "input_data", "location")
     else:
-        print(f"Your location: {city}")
+        print(f"Your location: {city}\n")
         update_worksheet(city, "input_data", "location")
 
-    print("Fetching current weather data...")
+    print("Fetching current weather data...\n")
     try:
         weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
         weather_data = weather_data.json()
         c = weather_data['current']
-        print("Weather data collected. Recording temprature, cloud cover, air preassure, wind speed, wind direction.")
+        print("Weather data collected. Recording temprature, cloud cover, air preassure, wind speed, wind direction.\n")
         update_worksheet(c['temperature_2m'], "input_data", "ground_temp")
         update_worksheet(c['cloud_cover'], "input_data", "cloud_cover")
         update_worksheet(c['pressure_msl'], "input_data", "air_pressure")
