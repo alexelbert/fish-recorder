@@ -81,11 +81,11 @@ def get_lure_type():
     """
     types = ['jig', 'spinner', 'spoon', 'crankbait', 'fly', 'swimbait', 'popper', 'jerkbait']
 
+    print("Select a lure type from the following list:\n")
+    for i, type in enumerate(types, start=1):
+        print(f"{i}. {type}")
+    
     while True:
-        print("Select a lure type from the following list:\n")
-        for i, type in enumerate(types, start=1):
-            print(f"{i}. {type}")
-
         response = get_user_input("Enter the number of your lure type:\n")
 
         if response.isdigit() and 1 <= int(response) <= len(types):
