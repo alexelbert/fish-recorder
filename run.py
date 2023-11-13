@@ -70,6 +70,24 @@ def get_retrieval_speed():
         if validate_data_input(response, ['y', 'n']):
             return 'fast' if response.lower() == 'y' else 'slow'
 
+def get_lure_type():
+    """
+    Asks the user to select a type of lure from a predefined list and returns the selected type.
+    """
+    types = ['jig', 'spinner', 'spoon', 'crankbait', 'fly', 'swimbait', 'popper', 'jerkbait']
+
+    while True:
+        print("Select a lure type from the following list:\n")
+        for i, type in enumerate(types, start=1):
+            print(f"{i}. {type}")
+
+        response = get_user_input("Enter the number of your lure type:\n")
+
+        if response.isdigit() and 1 <= int(response) <= len(types):
+            return types[int(response) - 1]
+        else:
+            print("Oops. Please enter a number corresponding to the lure types.\n")
+
 
 def update_worksheet(data, worksheet_name, column_name):
     """
@@ -111,6 +129,10 @@ def main():
     retrieval_speed = get_retrieval_speed()
     print("Retrieval speed: " + retrieval_speed)
     update_worksheet(retrieval_speed, "input_data", "retrieval_speed")
+
+    lure_type = get_lure_type()
+    print("Lure type: " + lure_type)
+    update_worksheet(lure_type, "input_data", "lure_type")
 
     # auto fill
     date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
