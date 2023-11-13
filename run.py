@@ -105,6 +105,26 @@ def get_lure_type():
         else:
             print("Oops. Please enter a number corresponding to the lure types.\n")
 
+def get_lure_colour():
+    """
+    Ask the user to input lure color as a string separated by commas.
+    Make sure the input is alphanumeric and lowercase,
+    as a way of preventing code to be inserted into input.
+    """
+    while True:
+        colours = get_user_input("Enter the colours of the lure, separated by commas:\n").split(',')
+        valid_colours = []
+
+        for colour in colours:
+            colour = colour.strip().lower()
+            if colour.isalnum():
+                valid_colours.append(colour)
+            else:
+                print(f"Invalid colour '{colour}'. Please enter your colours in lowercase seperated by commas.")
+                break
+        else:
+            return ','.join(valid_colours)
+
 
 def update_worksheet(data, worksheet_name, column_name):
     """
@@ -154,6 +174,10 @@ def main():
     lure_type = get_lure_type()
     print("Lure type: " + lure_type)
     update_worksheet(lure_type, "input_data", "lure_type")
+
+    lure_colour = get_lure_colour()
+    print("Lure colour: " + lure_colour)
+    update_worksheet(lure_colour, "input_data", "lure_colour")
 
     # auto fill
     date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
