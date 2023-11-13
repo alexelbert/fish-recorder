@@ -135,29 +135,32 @@ def main():
     """
     Main function to run the the fish recorder program.
     """
-    print("Welcome to Fish Recorder\n")
+    print("\nWelcome to Fish Recorder\n")
+    print("="*30, "\n")
 
     # user input
+    print("\n--- FISH DETAILS ---\n")
     fish_species = input("Enter your fish species:\n")
-    print("Fish species: " + fish_species)
+    print("\nFish species: " + fish_species)
 
     fish_size = get_fish_size()
-    print("Fish size: " + str(fish_size) + " cm")
+    print("\nFish size: " + str(fish_size) + " cm")
 
     water_clarity = yes_or_no('Was the water clear?', 'clear', 'turbid')
-    print("Water clarity: " + water_clarity)
+    print("\nWater clarity: " + water_clarity)
 
     retrieval_speed = yes_or_no('Was the retrieval speed fast?', 'fast', 'slow')
-    print("Retrieval speed: " + retrieval_speed)
+    print("\nRetrieval speed: " + retrieval_speed)
 
     lure_type = get_lure_type()
-    print("Lure type: " + lure_type)
+    print("\nLure type: " + lure_type)
 
     lure_colour = get_lure_colour()
-    print("Lure colour: " + lure_colour)
+    print("\nLure colour: " + lure_colour)
 
     # auto fill
     date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
+    print("\n--- LOCATION AND WEATHER DATA ---\n")
 
     print("Fetching your current location...\n")
     latitude, longitude, city = get_location()
@@ -197,7 +200,8 @@ def main():
 
     batch_update_worksheet(data, "input_data")
 
-    print("Data recorded successfully. Thank you for using Fish Recorder!")
+    print("\n--- DATA RECORDED SUCCESSFULLY ---\n")
+    print("Thank you for using Fish Recorder!")
 
 
 if __name__ == "__main__":
