@@ -66,26 +66,14 @@ def get_fish_size():
             print("Oops. Please enter a number.")
 
 
-def get_water_clarity():
+def yes_or_no(question, yes, no):
     """
-    Asks user if water clarity is clear, returns "clear" or "turbid" based 
-    of the user input.
-    """
+    Ask the user a yes or no question and returns the response.
+    """    
     while True:
-        response = get_user_input("Was the water clear? (y/n):\n")
+        response = get_user_input(f"{question} (y/n):\n")
         if validate_data_input(response, ['y', 'n']):
-            return 'clear' if response.lower() == 'y' else 'turbid'
-
-
-def get_retrieval_speed():
-    """
-    Asks user if retrieval speed is fast, returns "fast" or "slow" based
-    on the user input.
-    """
-    while True:
-        response = get_user_input("Was the retrieval speed fast? (y/n):\n")
-        if validate_data_input(response, ['y', 'n']):
-            return 'fast' if response.lower() == 'y' else 'slow'
+            return yes if response.lower() == 'y' else no
 
 def get_lure_type():
     """
@@ -163,11 +151,11 @@ def main():
     print("Fish size: " + str(fish_size) + " cm")
     update_worksheet(fish_size, "input_data", "fish_size")
 
-    water_clarity = get_water_clarity()
+    water_clarity = yes_or_no('Was the water clear?', 'clear', ' turbid')
     print("Water clarity: " + water_clarity)
     update_worksheet(water_clarity, "input_data", "water_clarity")
 
-    retrieval_speed = get_retrieval_speed()
+    retrieval_speed = yes_or_no('Was the retrieval speed fast?', 'fast', ' slow')
     print("Retrieval speed: " + retrieval_speed)
     update_worksheet(retrieval_speed, "input_data", "retrieval_speed")
 
