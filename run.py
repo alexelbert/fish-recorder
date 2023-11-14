@@ -181,6 +181,7 @@ def main():
     print("\nLure colour recorded: " + lure_colour)
 
     # auto fill
+    # Code used from stack overflow (datetime)
     date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
     print("\n--- LOCATION AND WEATHER DATA ---\n")
     print("Now, we will automatically fetch your current location "
@@ -233,6 +234,6 @@ def main():
     print("Thank you for using Fish Recorder!")
     print("Your fishing trip details have been successfully recorded.")
 
-
+# code from realpython
 if __name__ == "__main__":
     main()
