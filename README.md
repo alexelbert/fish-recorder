@@ -2,12 +2,12 @@
 
 [Visit website here](https://fish-recorder-6d6994a06f94.herokuapp.com)
 
+[Link to Google Sheets](https://docs.google.com/spreadsheets/d/1m_ye5kXZaw83oSMR0_k9Mbdj-be4N12jbOe3ayYSm-k/edit#gid=0)
+
 ![Responsive](images/responsive-fish-recorder.png)
 
 Fish Recorder is an interactive Python application designed for sport fishing/hobbyists to record and track details of their fishing trips. This tool helps capture information such as fish species, size, water clarity, lure details and automatically fetches the users location and current weather data. This website was made for educational purposes only.
 
-
-## UX
 
 ### Target Audience
 
@@ -113,25 +113,100 @@ The following technologies has been used to make this website work:
     - Used to make responsive image for README.md file.
 - [PEP8 linter](https://pep8ci.herokuapp.com/#)
     - Used to validate python code and check for errors.
+- []()
 
 
 
 ## Testing
 
-### User Stories
+Throughout the development of the Fish Recorder application, continuos testing was implemented to ensure a high level of quality and reliability. The testing focused on several key areas to deliver good performance and a userfriendly experience.
+
+Testing Approach
+
+- Continuos Testing Throughout Development
+    - Testing functions and code interactions in increments to allow for catching problems or misstakes early and allowing to pinpoint eventual errors.
+- Code Quality with PEP8 Linter
+    - Tested the quality of the code several times through the development using a PEP8 linter. This tool helped catching indentation errors mostly and making sure the code was up to par.
+    
+    ![Linter errors](images/linter-errors.png)
+
+    - Also helped catching errors in the code with error specification when code was left bare.
+
+    ![Bare](images/validation-except-errors.png)
+
+- Optimizing Google Sheets Interaction
+    - Recognizing further into the development that the updating of the Google Sheets was suboptimal and making the application slow. This was solved by using batch processing the data to the Google Sheets rather then calling one by one. This resulted in a much better and more userfriendly application.
+    ![Updating the Worksheet](images/update-sheet.png)
+    ![Batch updating](images/batch-update-sheet.png)
+
+- Error Handling and Input Validation
+    - During development various input scenarios was being tested to insure error handling was on point  and the code would not break. As usual there is always room for improvement.
+- Real-World Scenario Testing
+    - Simulating real user interactions was a key part of the testing process. By trying different input combinations to get a better grasp on how the application in diffrent user situations.
 
 
 ## Known bugs and fixes
 
+- Solved bugs
+    - There was a bug with fetching the weather data through the API at one point during the testing. But after making sure there was no issues it's was probably an external error that was temoprary. There is error handling in place for malfunction on external API services after testing to make sure data is entered as "null" in case external errors occur to keep the structure of the data intact.
+    - Had an error when validating the code where the lines were too long. Managed to edit them down so that the code is now valid and working as intended.
+    ![Valid](images/valid-code.png)
+
 
 ## Deployment
+
+This project was deployed using Heroku as a deployment platform.
+
+Steps for deployment:
+
+1. Fork or clone this repository
+2. Create a new Heroku app
+3. Name your App and choose region then click "create app"
+4. Go to settings then config vars, for the key enter CREDS and for the value copy and paste your entire creds.json file. If your project does not have a credentials file then skip this part.
+5. Add buildpacks, select Python then save changes. Add another buildpack, nodejs and save changes again.
+6. Go to the Deploy tab, select GitHub and confirm by clicking Connect to GitHub.
+7. Search for your repository name, when you have found it press connect to link your Heroku app to your repository.
+8. Your can choose automatic deployment that rebuilds the app everytime you push new code to your repository, or manually deploy wich ever you prefer.
+9. After it has finished building your project click view to see your project.
+
+
+
+*Forking the GitHub Repository*
+
+If you want to make any changes to your project without affecting it you can make a copy by "forking" this ensures that your original repository remains unchanged.
+
+1. Find the repository on Github
+2. In the top right corner you can click on the Fork button
+3. The repository has now been "Forked" and you now have a copy that you could work on
+
+*Cloning the Github Repository*
+
+Cloning your repository allows you to download a local version of the repository to work on, very useful to backup your work.
+
+1. Navigate to the repository
+2. Press the "Code" button
+3. Select the "Local" tab in the dropdown menu
+4. Copy the HTTPS link provided
+5. Type "git clone" and paste your link
+6. Press enter and you will now have a local clone of your repository
 
 
 ## Credits
  
+ Websites used during the project copied code is mentioned as comments in the code:
+
+ - [Weather API call](https://open-meteo.com/en/docs#current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m)
+ - [date,time](https://stackoverflow.com/questions/415511/how-do-i-get-the-current-time)
+ - [Error handling](https://stackoverflow.com/questions/6817640/catch-any-error-in-python)
+ - [gspread](https://docs.gspread.org/en/latest/user-guide.html#updating-cells)
+ - [realpython](https://realpython.com/python-requests/)
+ - [stackoverflow](https://stackoverflow.com/questions/43333625/find-computer-geographic-location-python)
+ - [ip-api](https://ip-api.com/docs)
+ - [google devs](https://developers.google.com/sheets/api/guides/batchupdate)
+ - [realpython](https://realpython.com/python-main-function/)
 
 ## Acknowledgements
 
-
+I want to thank my mentor Harry Dhillon for giving support through the project and my girlfriend Sabrina Fonseca Pereira for her support and feedback.
 
  
