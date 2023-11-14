@@ -55,7 +55,7 @@ def get_fish_size():
     that it is a number value and returns the size as a float value.
     """
     while True:
-        response = get_user_input("Enter the size  of the fish in cm:\n")
+        response = get_user_input("Enter the size of the fish in cm:\n")
         try:
             # try and convert response to a positive float value
             size = float(response)
@@ -82,7 +82,10 @@ def get_lure_type():
     Asks the user to select a type of lure from a predefined list
     and returns the selected type.
     """
-    types = ['jig', 'spinner', 'spoon', 'crankbait', 'fly', 'swimbait', 'popper', 'jerkbait']
+    types = [
+        'jig', 'spinner', 'spoon', 'crankbait', 'fly',
+        'swimbait', 'popper', 'jerkbait'
+    ]
 
     print("Select a lure type from the following list:\n")
     for i, type in enumerate(types, start=1):
@@ -113,7 +116,9 @@ def get_lure_colour():
             if colour.isalnum():
                 valid_colours.append(colour)
             else:
-                print(f"Invalid colour '{colour}'. Please enter your colours in lowercase seperated by commas.")
+                print(f"Invalid colour '{colour}'. Please enter your "
+                      "colours in lowercase, separated by "
+                      "commas.")
                 break
         else:
             return ','.join(valid_colours)
@@ -142,13 +147,16 @@ def main():
     Main function to run the the fish recorder program.
     """
     print("\nWelcome to Fish Recorder!\n")
-    print("This application helps you record details about your fishing trips\n Details of your catch, weather conditions and location.")
+    print("This application helps you record details about your "
+          "fishing trips\ndetails of your catch and automatically adds "
+          "weather conditions and location.")
     print("="*30, "\n")
 
     # user input
     print("\n--- FISH DETAILS ---\n")
     print("Let's start by recording details about the fish you caught.")
-    fish_species = input("Enter your fish species you caught (e.g., Trout, Perch):\n")
+    fish_species = input("Enter your fish species you caught "
+                         "(e.g., Trout, Perch):\n")
     print("\nFish species recorded: " + fish_species)
 
     print("\nNow let's record the size of the fish.")
@@ -160,12 +168,13 @@ def main():
     print("\nWater clarity recorded: " + water_clarity)
 
     print("\nLet's record the retrieval speed of your lure.")
-    retrieval_speed = yes_or_no('Was the retrieval speed fast?', 'fast', 'slow')
+    retrieval_speed = yes_or_no('Was the retrieval speed fast?',
+                                'fast', 'slow')
     print("\nRetrieval speed recorded: " + retrieval_speed)
 
     print("\nLet's select the type of lure you used.")
     lure_type = get_lure_type()
-    print("\nLure type recorded: " + lure_type)
+    print("\n\nLure type recorded: " + lure_type)
 
     print("\nFinally let's record the color of the lure.")
     lure_colour = get_lure_colour()
@@ -174,7 +183,8 @@ def main():
     # auto fill
     date, time = datetime.now().strftime('%Y-%m-%d %H:%M:%S').split()
     print("\n--- LOCATION AND WEATHER DATA ---\n")
-    print("Now, we will automatically fetch your current location and weather data.")
+    print("Now, we will automatically fetch your current location "
+          "and weather data.")
     print("Fetching your current location...\n")
     latitude, longitude, city = get_location()
     # if get_location() throws an error, add null for location variable
@@ -185,10 +195,16 @@ def main():
 
     print("Fetching current weather data...\n")
     try:
-        weather_data = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m&hourly=temperature_2m")
+        weather_data = requests.get(
+         f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&"
+         f"longitude={longitude}&current=temperature_2m,precipitation,"
+         f"weather_code,cloud_cover,pressure_msl,wind_speed_10m,"
+         f"wind_direction_10m&hourly=temperature_2m"
+        )
         weather_data = weather_data.json()
         c = weather_data['current']
-        print("Weather data collected. Recording temprature, cloud cover, air preassure, wind speed, wind direction.\n")
+        print("Weather data collected. Recording temperature, cloud cover, "
+              "air pressure, wind speed, wind direction.\n")
         temperature = c['temperature_2m']
         cloud_cover = c['cloud_cover']
         pressure = c['pressure_msl']
